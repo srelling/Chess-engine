@@ -232,6 +232,140 @@ public:
 }
 
     //checks if player who is not moving is in check
+    bool is_check(const vec &move){
+        if(king_pos.empty()){return false;}
+        
+
+        int i = move.at(2);
+        int j = move.at(3);
+
+        //Queen,Rook,BishopS
+        {
+        //down
+        for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j)) == 5 || std::abs(board_state.at(i+m).at(j)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //up
+        for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j)) == 5 || std::abs(board_state.at(i-m).at(j)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //right
+        for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i).at(j+m)) == 5 || std::abs(board_state.at(i).at(j+m)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //left
+        for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i).at(j-m)) == 5 || std::abs(board_state.at(i).at(j-m)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //up and right
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j+m)) == 5 || std::abs(board_state.at(i-m).at(j+m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //up and left
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j-m)) == 5 || std::abs(board_state.at(i-m).at(j-m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //down and right
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j+m)) == 5 || std::abs(board_state.at(i+m).at(j+m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //down and left
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j-m)) == 5 || std::abs(board_state.at(i+m).at(j-m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        }
+        
+        
+        //knight
+        for(int m = -2; m <= 2; ++m){
+                        int n = 3 - abs(m);
+                        if(n == 3){continue;}
+                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (std::abs(board_state.at(i+m).at(j+n)) == 2)){
+                            if((board_state.at(i+m).at(j+n) > 0) == !active_colour){
+                                return true;
+                            } 
+                        }
+                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (std::abs(board_state.at(i+m).at(j-n)) == 2)){
+                            if(board_state.at(i+m).at(j-n) == 0){continue;}
+                            if((board_state.at(i+m).at(j-n) > 0) == !active_colour){
+                                return true;
+                            } 
+                        }
+                    }
+
+        //king
+        for(int m = -1; m <= 1; ++m){
+                for(int n = -1; n <= 1; ++n){
+                    if(m == 0 && n == 0){continue;}
+                    if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == active_colour)){
+                        if(board_state.at(i+m).at(j+n) == 0){continue;}
+                            if(std::abs(board_state.at(i+m).at(j+n)) == 6){
+                                return true;
+                            }
+                    }
+                }
+            }
+
+        //pawns
+        int c = 1;
+        if(active_colour){c = -1;}
+        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == !active_colour){return true;}}
+        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == !active_colour){return true;}}
+
+        return false;
+
+        
+
+    }
+
     bool is_check(){
         if(king_pos.empty()){return false;}
         //std::cout << "GOT INTO IS CKECK FUNCTION";
@@ -493,14 +627,84 @@ public:
         else {return true;}
     }
 
-    bool is_move_legal(vec move){
-        //std::cout << "GOT INTO IS LEGAL FUNCTION";
-        //std::cout << "  MOVE:  ";
-        //print_ml(move);
-        position copied_position = {board_state, ml, active_colour, w_kc, w_qc, b_kc, b_qc, en_passant, halfmoves, fullmoves, king_pos};
-        //print_board(copied_position.board_state);
-        copied_position.make_move(move);
-        return !(copied_position.is_check());
+    bool is_move_in_king_line(const vec &move){
+
+        int mx = move.at(0);
+        int my = move.at(1);
+        int kx = king_pos.at(0 + 2*(1 - active_colour));
+        int ky = king_pos.at(1 + 2*(1 - active_colour));
+
+        if((mx == kx) || (my == ky)){return true;}
+        if(((mx - my) == (kx - ky)) || ((mx + my) == (kx + ky))){return true;}
+
+        return false;
+    }
+   
+    bool moved_pinned_piece(const vec &move){
+
+        int mx = move.at(0);
+        int my = move.at(1);
+        int kx = king_pos.at(0 + 2*(1 - active_colour));
+        int ky = king_pos.at(1 + 2*(1 - active_colour));
+
+        int i_it = ((mx - kx) > 0) - ((mx - kx) < 0);
+        int j_it = ((my - ky) > 0) - ((my - ky) < 0);
+        int i = kx + 2*i_it;
+        int j = ky + 2*j_it;
+        
+        for(;(i >= 0) && (i < 8) && (j >= 0) && (j < 8);){
+            
+            if(i == move.at(2) && j == move.at(3)){return false;}
+
+            int piece = board_state.at(i).at(j);
+            if(piece != 0){
+
+                
+                if(active_colour && piece > 0){return false;}
+                if(!active_colour && piece < 0){return false;}
+
+                if(std::abs(piece) == 5){return true;}
+                if(std::abs(piece) == 4 && ((i_it == 0) || (j_it == 0))){return true;}
+                if(std::abs(piece) == 3 && ((i_it != 0) && (j_it != 0))){return true;}
+
+                return false;
+
+            }
+
+
+            i += i_it;
+            j += j_it;
+        }
+
+        return false;
+    }
+
+    bool is_move_legal(const vec &move){
+
+        if(active_colour && (board_state.at(move.at(2)).at(move.at(3) > 0))){
+            return false;
+            }
+        if((!active_colour) && (board_state.at(move.at(2)).at(move.at(3)) < 0)){
+            return false;
+            }
+
+        if(std::abs(board_state.at(move.at(0)).at(move.at(1))) == 6)
+        //move is with king
+        {
+
+        if(is_check(move)){
+            return false;}
+        return true;
+
+        } else {
+
+        if(!is_move_in_king_line(move)){
+            return true;}
+        if(!moved_pinned_piece(move)){
+            return true;}
+        return false;
+
+        }
         
     }
 
@@ -1531,6 +1735,16 @@ int main(){
                    {0,0,0,0,0,0,0,0},
                    {0,0,0,0,0,0,0,0},
                    {0,0,0,0,0,0,0,0}}; //{}
+
+    board test3 = {{0,0,0,0,-6,0,0,0},
+                   {0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,-1,0,0},
+                   {1,1,0,0,0,0,1,0},
+                   {-5,3,0,0,6,0,0,0}}; //{}
+
     
     board test1 = {{0,-4,-3,-4,0,0,-6,0},
                    {-1,-1,0,0,0,-1,-1,0},
@@ -1551,9 +1765,13 @@ int main(){
                    {0,4,3,0,0,4,0,6}}; //{7,7,0,6}
     
     std::cout << std::fixed;
-    position start_position = {start1, {}, true, 1, 1, 1, 1, {}, 0, 0, {7,4,0,4}};
+    position start_position = {start1, {}, 1, 1, 1, 1, 1, {}, 0, 0, {7,4,0,4}};
 
     start_position.update_ml();
+    //print_ml(start_position.get_ml());
+    //start_position.print_board();
+    
+
     
 
     //print_ml(start_position.get_ml());
@@ -1606,6 +1824,7 @@ int main(){
         }
         start_position.make_move(move);
         start_position.update_ml();
+        print_ml(start_position.get_ml());
         }
 
         //Computer Player Move
@@ -1616,18 +1835,18 @@ int main(){
         if(start_position.get_ml().size() <= 1000){depth = 5;}
         if(start_position.get_ml().size() <= 10 && start_position.get_fm() > 80){depth = 5;}
         if(start_position.get_ml().size() <= 5 && start_position.get_fm() > 80){depth = 6;}
-        vec bestMove = start_position.best_move(depth); // <----- DEPTH
+        vec bestMove = start_position.best_move(6); // <----- DEPTH
         std::cout << "\nBest move: ";
         print_move(bestMove);
         std::cout << "\n";
         start_position.make_move(bestMove);
         start_position.update_ml();
         }
-        break;
+        
     }
     
     start_position.print_board();
-    //print_ml(start_position.get_ml());
+    print_ml(start_position.get_ml());
     std::cout << "Possible Move Count: " << start_position.get_ml().size() << "\n";
     std::cout << "CHECK MATE!\n";
     if(start_position.get_col()){std::cout << "Black wins!\n";}
