@@ -244,80 +244,80 @@ public:
         {
         //down
         for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j) == 0)){
+                        if(board_state.at(i+m).at(j) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j)) == 5 || fabs(board_state.at(i+m).at(j)) == 4){
+                        if(std::abs(board_state.at(i+m).at(j)) == 5 || std::abs(board_state.at(i+m).at(j)) == 4){
                             return true;
                         }
                         break;
                     }
         //up
         for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j) == 0)){
+                        if(board_state.at(i-m).at(j) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j)) == 5 || fabs(board_state.at(i-m).at(j)) == 4){
+                        if(std::abs(board_state.at(i-m).at(j)) == 5 || std::abs(board_state.at(i-m).at(j)) == 4){
                             return true;
                         }
                         break;
                     }
         //right
         for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i).at(j+m) == 0)){
+                        if(board_state.at(i).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i).at(j+m)) == 5 || fabs(board_state.at(i).at(j+m)) == 4){
+                        if(std::abs(board_state.at(i).at(j+m)) == 5 || std::abs(board_state.at(i).at(j+m)) == 4){
                             return true;
                         }
                         break;
                     }
         //left
         for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i).at(j-m) == 0)){
+                        if(board_state.at(i).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i).at(j-m)) == 5 || fabs(board_state.at(i).at(j-m)) == 4){
+                        if(std::abs(board_state.at(i).at(j-m)) == 5 || std::abs(board_state.at(i).at(j-m)) == 4){
                             return true;
                         }
                         break;
                     }
         //up and right
         for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j+m) == 0)){
+                        if(board_state.at(i-m).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j+m)) == 5 || fabs(board_state.at(i-m).at(j+m)) == 3){
+                        if(std::abs(board_state.at(i-m).at(j+m)) == 5 || std::abs(board_state.at(i-m).at(j+m)) == 3){
                             return true;
                         }
                         break;
                     }
         //up and left
         for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j-m) == 0)){
+                        if(board_state.at(i-m).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j-m)) == 5 || fabs(board_state.at(i-m).at(j-m)) == 3){
+                        if(std::abs(board_state.at(i-m).at(j-m)) == 5 || std::abs(board_state.at(i-m).at(j-m)) == 3){
                             return true;
                         }
                         break;
                     }
         //down and right
         for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j+m) == 0)){
+                        if(board_state.at(i+m).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j+m)) == 5 || fabs(board_state.at(i+m).at(j+m)) == 3){
+                        if(std::abs(board_state.at(i+m).at(j+m)) == 5 || std::abs(board_state.at(i+m).at(j+m)) == 3){
                             return true;
                         }
                         break;
                     }
         //down and left
         for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j-m) == 0)){
+                        if(board_state.at(i+m).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j-m)) == 5 || fabs(board_state.at(i+m).at(j-m)) == 3){
+                        if(std::abs(board_state.at(i+m).at(j-m)) == 5 || std::abs(board_state.at(i+m).at(j-m)) == 3){
                             return true;
                         }
                         break;
@@ -329,12 +329,12 @@ public:
         for(int m = -2; m <= 2; ++m){
                         int n = 3 - abs(m);
                         if(n == 3){continue;}
-                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (fabs(board_state.at(i+m).at(j+n)) == 2)){
+                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (std::abs(board_state.at(i+m).at(j+n)) == 2)){
                             if((board_state.at(i+m).at(j+n) > 0) == active_colour){
                                 return true;
                             } 
                         }
-                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (fabs(board_state.at(i+m).at(j-n)) == 2)){
+                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (std::abs(board_state.at(i+m).at(j-n)) == 2)){
                             if(board_state.at(i+m).at(j-n) == 0){continue;}
                             if((board_state.at(i+m).at(j-n) > 0) == active_colour){
                                 return true;
@@ -348,7 +348,7 @@ public:
                     if(m == 0 && n == 0){continue;}
                     if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == !active_colour)){
                         if(board_state.at(i+m).at(j+n) == 0){continue;}
-                            if(fabs(board_state.at(i+m).at(j+n)) == 6){
+                            if(std::abs(board_state.at(i+m).at(j+n)) == 6){
                                 return true;
                             }
                     }
@@ -358,8 +358,8 @@ public:
         //pawns
         int c = 1;
         if(!active_colour){c = -1;}
-        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (fabs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == active_colour){return true;}}
-        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (fabs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == active_colour){return true;}}
+        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == active_colour){return true;}}
+        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == active_colour){return true;}}
 
         return false;
         }
@@ -374,19 +374,19 @@ public:
         //pawns
         int c = 1;
         if(!active_colour){c = -1;}
-        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (fabs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == active_colour){return 1;}}
-        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (fabs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == active_colour){return 1;}}
+        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == active_colour){return 1;}}
+        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == active_colour){return 1;}}
 
         //knight
         for(int m = -2; m <= 2; ++m){
                         int n = 3 - abs(m);
                         if(n == 3){continue;}
-                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (fabs(board_state.at(i+m).at(j+n)) == 2)){
+                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (std::abs(board_state.at(i+m).at(j+n)) == 2)){
                             if((board_state.at(i+m).at(j+n) > 0) == active_colour){
                                 return 2;
                             } 
                         }
-                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (fabs(board_state.at(i+m).at(j-n)) == 2)){
+                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (std::abs(board_state.at(i+m).at(j-n)) == 2)){
                             if(board_state.at(i+m).at(j-n) == 0){continue;}
                             if((board_state.at(i+m).at(j-n) > 0) == active_colour){
                                 return 2;
@@ -398,81 +398,81 @@ public:
         {
         //down
         for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j) == 0)){
+                        if(board_state.at(i+m).at(j) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j)) == 5 || fabs(board_state.at(i+m).at(j)) == 4){
-                            return fabs(board_state.at(i+m).at(j));
+                        if(std::abs(board_state.at(i+m).at(j)) == 5 || std::abs(board_state.at(i+m).at(j)) == 4){
+                            return std::abs(board_state.at(i+m).at(j));
                         }
                         break;
                     }
         //up
         for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j) == 0)){
+                        if(board_state.at(i-m).at(j) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j)) == 5 || fabs(board_state.at(i-m).at(j)) == 4){
-                            return fabs(board_state.at(i-m).at(j));
+                        if(std::abs(board_state.at(i-m).at(j)) == 5 || std::abs(board_state.at(i-m).at(j)) == 4){
+                            return std::abs(board_state.at(i-m).at(j));
                         }
                         break;
                     }
         //right
         for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i).at(j+m) == 0)){
+                        if(board_state.at(i).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i).at(j+m)) == 5 || fabs(board_state.at(i).at(j+m)) == 4){
-                            return fabs(board_state.at(i).at(j+m));
+                        if(std::abs(board_state.at(i).at(j+m)) == 5 || std::abs(board_state.at(i).at(j+m)) == 4){
+                            return std::abs(board_state.at(i).at(j+m));
                         }
                         break;
                     }
         //left
         for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i).at(j-m) == 0)){
+                        if(board_state.at(i).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i).at(j-m)) == 5 || fabs(board_state.at(i).at(j-m)) == 4){
-                            return fabs(board_state.at(i).at(j-m));
+                        if(std::abs(board_state.at(i).at(j-m)) == 5 || std::abs(board_state.at(i).at(j-m)) == 4){
+                            return std::abs(board_state.at(i).at(j-m));
                         }
                         break;
                     }
         //up and right
         for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j+m) == 0)){
+                        if(board_state.at(i-m).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j+m)) == 5 || fabs(board_state.at(i-m).at(j+m)) == 3){
-                            return fabs(board_state.at(i-m).at(j+m));
+                        if(std::abs(board_state.at(i-m).at(j+m)) == 5 || std::abs(board_state.at(i-m).at(j+m)) == 3){
+                            return std::abs(board_state.at(i-m).at(j+m));
                         }
                         break;
                     }
         //up and left
         for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i-m).at(j-m) == 0)){
+                        if(board_state.at(i-m).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i-m).at(j-m)) == 5 || fabs(board_state.at(i-m).at(j-m)) == 3){
-                            return fabs(board_state.at(i-m).at(j-m));
+                        if(std::abs(board_state.at(i-m).at(j-m)) == 5 || std::abs(board_state.at(i-m).at(j-m)) == 3){
+                            return std::abs(board_state.at(i-m).at(j-m));
                         }
                         break;
                     }
         //down and right
         for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j+m) == 0)){
+                        if(board_state.at(i+m).at(j+m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j+m)) == 5 || fabs(board_state.at(i+m).at(j+m)) == 3){
-                            return fabs(board_state.at(i+m).at(j+m));
+                        if(std::abs(board_state.at(i+m).at(j+m)) == 5 || std::abs(board_state.at(i+m).at(j+m)) == 3){
+                            return std::abs(board_state.at(i+m).at(j+m));
                         }
                         break;
                     }
         //down and left
         for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == !active_colour)))); ++m){
-                        if((board_state.at(i+m).at(j-m) == 0)){
+                        if(board_state.at(i+m).at(j-m) == 0){
                         continue;
                         }
-                        if(fabs(board_state.at(i+m).at(j-m)) == 5 || fabs(board_state.at(i+m).at(j-m)) == 3){
-                            return fabs(board_state.at(i+m).at(j-m));
+                        if(std::abs(board_state.at(i+m).at(j-m)) == 5 || std::abs(board_state.at(i+m).at(j-m)) == 3){
+                            return std::abs(board_state.at(i+m).at(j-m));
                         }
                         break;
                     }
@@ -1435,7 +1435,7 @@ public:
                 sort_list.at(i) = -5;
                 continue;
             }
-            sort_list.at(i) = fabs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))) - fabs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)));
+            sort_list.at(i) = std::abs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))) - std::abs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)));
         }
 
         //insertion sort
@@ -1457,7 +1457,7 @@ public:
                 sort_list.at(i) = -5;
                 continue;
             }
-            sort_list.at(i) = fabs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))) - fabs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)));
+            sort_list.at(i) = std::abs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))) - std::abs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)));
         }
 
         
@@ -1483,7 +1483,7 @@ public:
         for(int i = 0; i < ml.size(); ++i){
             if(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3)) != 0){
                 std::swap(ml.at(i),ml.at(j));
-                if((fabs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)))) <= (fabs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))))){
+                if((std::abs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)))) <= (std::abs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))))){
                     std::swap(ml.at(j),ml.at(k));
                     ++k;
                 }
