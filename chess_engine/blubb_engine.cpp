@@ -366,6 +366,160 @@ public:
 
     }
 
+
+    
+    bool same_move(int i, int j, int x, int y){
+        return i == x && j == y;
+    }
+
+    bool is_check2(const vec &move){
+        if(king_pos.empty()){return false;}
+        //std::cout << "GOT INTO IS CKECK FUNCTION";
+        int p = 0;
+        if(!active_colour){p = 2;}
+        int i = king_pos.at(p);
+        int j = king_pos.at(p+1);
+
+        int x = move.at(2);
+        int y = move.at(3);
+
+        //Queen,Rook,BishopS
+        {
+        //down
+        for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i+m).at(j) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j)) == 5 || std::abs(board_state.at(i+m).at(j)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //up
+        for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i-m).at(j) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j)) == 5 || std::abs(board_state.at(i-m).at(j)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //right
+        for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i).at(j+m)) == 5 || std::abs(board_state.at(i).at(j+m)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //left
+        for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i).at(j-m)) == 5 || std::abs(board_state.at(i).at(j-m)) == 4){
+                            return true;
+                        }
+                        break;
+                    }
+        //up and right
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i-m).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j+m)) == 5 || std::abs(board_state.at(i-m).at(j+m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //up and left
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i-m).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i-m).at(j-m)) == 5 || std::abs(board_state.at(i-m).at(j-m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //down and right
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i+m).at(j+m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j+m)) == 5 || std::abs(board_state.at(i+m).at(j+m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        //down and left
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == active_colour)))); ++m){
+                        if(same_move(i,j,x,y)){break;}
+                        if(board_state.at(i+m).at(j-m) == 0){
+                        continue;
+                        }
+                        if(std::abs(board_state.at(i+m).at(j-m)) == 5 || std::abs(board_state.at(i+m).at(j-m)) == 3){
+                            return true;
+                        }
+                        break;
+                    }
+        }
+        
+
+        //knight
+        for(int m = -2; m <= 2; ++m){
+                        int n = 3 - abs(m);
+                        if(n == 3){continue;}
+                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (std::abs(board_state.at(i+m).at(j+n)) == 2)){
+                            if((board_state.at(i+m).at(j+n) > 0) == !active_colour){
+                                if(same_move(i,j,x,y)){return false;;}
+                                return true;
+                            } 
+                        }
+                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (std::abs(board_state.at(i+m).at(j-n)) == 2)){
+                            if(board_state.at(i+m).at(j-n) == 0){continue;}
+                            if((board_state.at(i+m).at(j-n) > 0) == !active_colour){
+                                if(same_move(i,j,x,y)){return false;;}
+                                return true;
+                            } 
+                        }
+                    }
+
+        //king
+        for(int m = -1; m <= 1; ++m){
+                for(int n = -1; n <= 1; ++n){
+                    if(m == 0 && n == 0){continue;}
+                    if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == active_colour)){
+                        if(board_state.at(i+m).at(j+n) == 0){continue;}
+                            if(std::abs(board_state.at(i+m).at(j+n)) == 6){
+                                return true;
+                            }
+                    }
+                }
+            }
+
+        //pawns
+        int c = 1;
+        if(active_colour){c = -1;}
+        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){
+            if((board_state.at(i+c).at(j+1) > 0) == !active_colour && !same_move(i,j,x,y)){return true;}}
+        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1))
+        {if((board_state.at(i+c).at(j-1) > 0) == !active_colour && !same_move(i,j,x,y)){return true;}}
+
+        return false;
+        }
+    
+
     bool is_check(){
         if(king_pos.empty()){return false;}
         //std::cout << "GOT INTO IS CKECK FUNCTION";
@@ -649,12 +803,19 @@ public:
 
         int i_it = ((mx - kx) > 0) - ((mx - kx) < 0);
         int j_it = ((my - ky) > 0) - ((my - ky) < 0);
-        int i = kx + 2*i_it;
-        int j = ky + 2*j_it;
+        int i = kx + i_it;
+        int j = ky + j_it;
         
+        if(i_it == 0 && j_it == 0){return true;}
+
         for(;(i >= 0) && (i < 8) && (j >= 0) && (j < 8);){
             
             if(i == move.at(2) && j == move.at(3)){return false;}
+            if(i == move.at(0) && j == move.at(1)){
+                i += i_it;
+                j += j_it;
+                continue;
+            }
 
             int piece = board_state.at(i).at(j);
             if(piece != 0){
@@ -681,7 +842,7 @@ public:
 
     bool is_move_legal(const vec &move){
 
-        if(active_colour && (board_state.at(move.at(2)).at(move.at(3) > 0))){
+        if(active_colour && (board_state.at(move.at(2)).at(move.at(3)) > 0)){
             return false;
             }
         if((!active_colour) && (board_state.at(move.at(2)).at(move.at(3)) < 0)){
@@ -698,6 +859,7 @@ public:
 
         } else {
 
+        if(is_check2(move)){return false;}
         if(!is_move_in_king_line(move)){
             return true;}
         if(!moved_pinned_piece(move)){
@@ -1393,65 +1555,75 @@ public:
         //material
         for(int i = 0; i < 8; ++i){
             for(int j = 0 ; j < 8; ++j){
-                //nothing
-                if(board_state.at(i).at(j) == 0){continue;}
-                
-                //kings
-                if(board_state.at(i).at(j) == 6){
-                    eval += 0.3*wkv_a.at(i).at(j)/nine;
-                    continue;
+                    // Assuming that board_state.at(i).at(j) is of int type
+                int boardValue = board_state.at(i).at(j);
+
+                switch(boardValue){
+                    case 0: // nothing
+                        break;
+
+                    case 6: // kings
+                        eval += 0.3*wkv_a.at(i).at(j)/nine;
+                        break;
+
+                    case -6:
+                        eval -= 0.3*bkv_a.at(i).at(j)/nine;
+                        break;
+
+                    case 1: // pawns
+                        eval += 0.710001;
+                        eval += (wpv_e.at(i).at(j)*late)/nine/pawn_count;
+                        eval += (wpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
+                        break;
+
+                    case -1:
+                        eval -= 0.71;
+                        eval -= (bpv_e.at(i).at(j)*late)/9/8;
+                        eval -= (bpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
+                        break;
+
+                    case 2: // knights
+                        eval += 2.930001;
+                        eval += (wnv_a.at(i).at(j)*late)/nine/pawn_count;
+                        break;
+
+                    case -2:
+                        eval -= 2.93;
+                        eval -= (bnv_a.at(i).at(j)*late)/nine/piece_count;
+                        break;
+
+                    case 3: // bishops
+                        eval += 3.000001;
+                        eval += (wbv_a.at(i).at(j)*late)/nine/piece_count;
+                        break;
+
+                    case -3:
+                        eval -= 3.00;
+                        eval -= (bbv_a.at(i).at(j)*late)/nine/piece_count;
+                        break;
+
+                    case 4: // rooks
+                        eval += 4.560001;
+                        eval += (wrv_a.at(i).at(j)*late)/nine/piece_count;
+                        break;
+
+                    case -4:
+                        eval -= 4.56;
+                        eval -= (brv_a.at(i).at(j)*late)/nine/piece_count;
+                        break;
+
+                    case 5: // queens
+                        eval += 9.050001;
+                        break;
+
+                    case -5:
+                        eval -= 9.05;
+                        break;
+
+                    default:
+                        // some error handling or a default behavior if necessary
+                        break;
                 }
-                if(board_state.at(i).at(j) == -6){
-                    eval -= 0.3*bkv_a.at(i).at(j)/nine;
-                    continue;
-                }
-                //pawns
-                if(board_state.at(i).at(j) == 1){
-                    eval += 0.710001;
-                    eval += (wpv_e.at(i).at(j)*late)/nine/pawn_count;
-                    //std::cout << "\nPAWN: " << (wpv_l.at(i).at(j)*(1.001 - late))/9/8;
-                    eval += (wpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
-                    }
-                else if(board_state.at(i).at(j) == -1){
-                    eval -= 0.71;
-                    eval -= (bpv_e.at(i).at(j)*late)/9/8;
-                    eval -= (bpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
-                    }
-                //knights
-                else if(board_state.at(i).at(j) == 2){
-                    eval += 2.930001;
-                    //std::cout << "\nNIGHT: " << (wnv_a.at(i).at(j)*late)/9/6;
-                    eval += (wnv_a.at(i).at(j)*late)/nine/pawn_count;
-                    }
-                else if(board_state.at(i).at(j) == -2){
-                    eval -= 2.93;
-                    eval -= (bnv_a.at(i).at(j)*late)/nine/piece_count;
-                    }
-                //bishops
-                else if(board_state.at(i).at(j) == 3){
-                    eval += 3.000001;
-                    eval += (wbv_a.at(i).at(j)*late)/nine/piece_count;
-                    }
-                else if(board_state.at(i).at(j) == -3){
-                    eval -= 3.00;
-                    eval -= (bbv_a.at(i).at(j)*late)/nine/piece_count;
-                    }
-                //rooks
-                else if(board_state.at(i).at(j) == 4){
-                    eval += 4.560001;
-                    eval += (wrv_a.at(i).at(j)*late)/nine/piece_count;
-                    }
-                else if(board_state.at(i).at(j) == -4){
-                    eval -= 4.56;
-                    eval -= (brv_a.at(i).at(j)*late)/nine/piece_count;
-                    }
-                //queens
-                else if(board_state.at(i).at(j) == 5){
-                    eval += 9.050001;
-                    }
-                else if(board_state.at(i).at(j) == -5){
-                    eval -= 9.05;
-                    }
 
             }
         }
@@ -1528,6 +1700,7 @@ public:
         }
         
     }
+    
     //returns the best move using min max
     vec best_move(int depth){
         if(depth == 0){return {};}
@@ -1768,29 +1941,8 @@ int main(){
     position start_position = {start1, {}, 1, 1, 1, 1, 1, {}, 0, 0, {7,4,0,4}};
 
     start_position.update_ml();
-    //print_ml(start_position.get_ml());
-    //start_position.print_board();
     
-
     
-
-    //print_ml(start_position.get_ml());
-    //start_position.quick_sort_moves2();
-    //start_position.quick_sort_moves();
-    //std::cout << start_position.eval();
-    //std::cout << "Sorted qs2: \n";
-    //print_ml(start_position.get_ml());
-    //std::cout << "Sorted qs3: \n";
-    //start_position.update_ml();
-    //start_position.quick_sort_moves3();
-    //print_ml(start_position.get_ml());
-    //return 0;
-    
-
-    /*
-    if(start_position.is_check()){std::cout << "It is check!\n";}
-    else{std::cout << "It is not check!\n";}
-    */
    auto start = high_resolution_clock::now();
     while(start_position.get_ml().size() != 0 && start_position.get_hm() < 41){//while(start_position.get_ml().size() != 0 && start_position.get_hm() < 41){
         start_position.print_board();
@@ -1835,13 +1987,14 @@ int main(){
         if(start_position.get_ml().size() <= 1000){depth = 5;}
         if(start_position.get_ml().size() <= 10 && start_position.get_fm() > 80){depth = 5;}
         if(start_position.get_ml().size() <= 5 && start_position.get_fm() > 80){depth = 6;}
-        vec bestMove = start_position.best_move(6); // <----- DEPTH
+        vec bestMove = start_position.best_move(5); // <----- DEPTH
         std::cout << "\nBest move: ";
         print_move(bestMove);
         std::cout << "\n";
         start_position.make_move(bestMove);
         start_position.update_ml();
         }
+        
         
     }
     
