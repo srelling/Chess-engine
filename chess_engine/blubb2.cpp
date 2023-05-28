@@ -185,6 +185,7 @@ struct state {
     vec last_move; // last move made
     vec en_passant; //square where en passant is possible. '-' if none are possible
     vec king_pos; //(w_king_m, w_king_n, b_king_m, b_king_n)
+    move_list ml; //move list
 
 };
 
@@ -250,14 +251,14 @@ class position {
         if(state_history.back().king_pos.empty()){return false;}
         //std::cout << "GOT INTO IS CKECK FUNCTION";
         int p = 0;
-        if(!state_history.back().active_colour){p = 2;}
+        if(state_history.back().active_colour){p = 2;}
         int i = state_history.back().king_pos.at(p);
         int j = state_history.back().king_pos.at(p+1);
 
         //Queen,Rook,BishopS
         {
         //down
-        for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (((board_state.at(i+m).at(j) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i+m).at(j) == 0){
                         continue;
                         }
@@ -267,7 +268,7 @@ class position {
                         break;
                     }
         //up
-        for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (((board_state.at(i-m).at(j) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i-m).at(j) == 0){
                         continue;
                         }
@@ -277,7 +278,7 @@ class position {
                         break;
                     }
         //right
-        for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (((board_state.at(i).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i).at(j+m) == 0){
                         continue;
                         }
@@ -287,7 +288,7 @@ class position {
                         break;
                     }
         //left
-        for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (((board_state.at(i).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i).at(j-m) == 0){
                         continue;
                         }
@@ -297,7 +298,7 @@ class position {
                         break;
                     }
         //up and right
-        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (((board_state.at(i-m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i-m).at(j+m) == 0){
                         continue;
                         }
@@ -307,7 +308,7 @@ class position {
                         break;
                     }
         //up and left
-        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (((board_state.at(i-m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i-m).at(j-m) == 0){
                         continue;
                         }
@@ -317,7 +318,7 @@ class position {
                         break;
                     }
         //down and right
-        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (((board_state.at(i+m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i+m).at(j+m) == 0){
                         continue;
                         }
@@ -327,7 +328,7 @@ class position {
                         break;
                     }
         //down and left
-        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == !state_history.back().active_colour)))); ++m){
+        for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (((board_state.at(i+m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
                         if(board_state.at(i+m).at(j-m) == 0){
                         continue;
                         }
@@ -344,6 +345,7 @@ class position {
                         int n = 3 - abs(m);
                         if(n == 3){continue;}
                         if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (std::abs(board_state.at(i+m).at(j+n)) == 2)){
+                            if(board_state.at(i+m).at(j+n) == 0){continue;}
                             if((board_state.at(i+m).at(j+n) > 0) == state_history.back().active_colour){
                                 return true;
                             } 
@@ -360,7 +362,7 @@ class position {
         for(int m = -1; m <= 1; ++m){
                 for(int n = -1; n <= 1; ++n){
                     if(m == 0 && n == 0){continue;}
-                    if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == !state_history.back().active_colour)){
+                    if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == state_history.back().active_colour)){
                         if(board_state.at(i+m).at(j+n) == 0){continue;}
                             if(std::abs(board_state.at(i+m).at(j+n)) == 6){
                                 return true;
@@ -372,8 +374,14 @@ class position {
         //pawns
         int c = 1;
         if(!state_history.back().active_colour){c = -1;}
-        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){if((board_state.at(i+c).at(j+1) > 0) == state_history.back().active_colour){return true;}}
-        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1)){if((board_state.at(i+c).at(j-1) > 0) == state_history.back().active_colour){return true;}}
+        if((i+c >= 0 && i+c <= 7) && (j+1 >= 0 && j+1 <= 7) && (std::abs(board_state.at(i+c).at(j+1)) == 1)){
+            if((board_state.at(i+c).at(j+1) > 0) == state_history.back().active_colour){
+            return true;
+            }}
+        if((i+c >= 0 && i+c <= 7) && (j-1 >= 0 && j-1 <= 7) && (std::abs(board_state.at(i+c).at(j-1)) == 1)){
+            if((board_state.at(i+c).at(j-1) > 0) == state_history.back().active_colour){
+            return true;
+            }}
 
         return false;
         }
@@ -576,11 +584,11 @@ class position {
 
     //updates movelist
     void update_ml(){
-        ml = possible_moves(*this);
+        state_history.back().ml = possible_moves();
     }
 
     //generates the move list
-    move_list possible_moves(position &p){
+    move_list possible_moves(){
         
         ++possible_move_calls;
          move_list ml;
@@ -589,18 +597,18 @@ class position {
         for(int i = 0; i < 8; ++i){
             for(int j = 0 ; j < 8; ++j){
                 //nothing
-                if(p.board_state.at(i).at(j) == 0){continue;}
+                if(board_state.at(i).at(j) == 0){continue;}
                 
                 //pawns
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 1 || p.board_state.at(i).at(j) == -1)){
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 1 || board_state.at(i).at(j) == -1)){
                     //white
-                    if(p.state_history.back().active_colour){
-                        if(j != 0 && p.board_state.at(i-1).at(j-1) < 0){
+                    if(state_history.back().active_colour){
+                        if(j != 0 && board_state.at(i-1).at(j-1) < 0){
                             if(is_move_legal({i,j,i-1,j-1})){
                             ml.push_back({i,j,i-1,j-1});
                             }
                         }
-                        if(j != 7 && p.board_state.at(i-1).at(j+1) < 0){
+                        if(j != 7 && board_state.at(i-1).at(j+1) < 0){
                             if(is_move_legal({i,j,i-1,j+1})){
                             ml.push_back({i,j,i-1,j+1});
                             }
@@ -608,12 +616,12 @@ class position {
                     }
                     //black
                     else{
-                        if(j != 0 && p.board_state.at(i+1).at(j-1) > 0){
+                        if(j != 0 && board_state.at(i+1).at(j-1) > 0){
                             if(is_move_legal({i,j,i+1,j-1})){
                             ml.push_back({i,j,i+1,j-1});
                             }
                         }
-                        if(j != 7 && p.board_state.at(i+1).at(j+1) > 0){
+                        if(j != 7 && board_state.at(i+1).at(j+1) > 0){
                             if(is_move_legal({i,j,i+1,j+1})){
                             ml.push_back({i,j,i+1,j+1});
                             }
@@ -622,16 +630,16 @@ class position {
                 }
                
                 //knight
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 2 || p.board_state.at(i).at(j) == -2)){   
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 2 || board_state.at(i).at(j) == -2)){   
                     for(int m = -2; m <= 2; ++m){
                         int n = 3 - abs(m);
                         if(n == 3){continue;}
-                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (p.board_state.at(i+m).at(j+n) == 0 || (p.board_state.at(i+m).at(j+n) < 0) == p.state_history.back().active_colour)){
+                        if((i+m >= 0 && i+m <= 7) && (j+n >= 0 && j+n <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(i+m).at(j+n) < 0) == state_history.back().active_colour)){
                             if(is_move_legal({i,j,i+m,j+n})){
                             ml.push_back({i,j,i+m,j+n});
                             }
                         }
-                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (p.board_state.at(i+m).at(j-n) == 0 || (p.board_state.at(i+m).at(j-n) < 0) == p.state_history.back().active_colour)){
+                        if((i+m >= 0 && i+m <= 7) && (j-n >= 0 && j-n <= 7) && (board_state.at(i+m).at(j-n) == 0 || (board_state.at(i+m).at(j-n) < 0) == state_history.back().active_colour)){
                             if(is_move_legal({i,j,i+m,j-n})){
                             ml.push_back({i,j,i+m,j-n});
                             }
@@ -640,10 +648,10 @@ class position {
                 }
                 
                 //Bishop
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 3 || p.board_state.at(i).at(j) == -3)){
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 3 || board_state.at(i).at(j) == -3)){
                     //up and right
-                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((p.board_state.at(i-m).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j+m) == 0){
+                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j+m) == 0){
                         if(is_move_legal({i,j,i-m,j+m})){
                         ml.push_back({i,j,i-m,j+m});
                         }
@@ -656,8 +664,8 @@ class position {
                         
                     }
                     //up and left
-                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((p.board_state.at(i-m).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j-m) == 0){
+                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j-m) == 0){
                         if(is_move_legal({i,j,i-m,j-m})){
                         ml.push_back({i,j,i-m,j-m});
                         }
@@ -670,8 +678,8 @@ class position {
                         
                     }
                     //down and right
-                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((p.board_state.at(i+m).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j+m) == 0){
+                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j+m) == 0){
                         if(is_move_legal({i,j,i+m,j+m})){
                         ml.push_back({i,j,i+m,j+m});
                         }
@@ -684,8 +692,8 @@ class position {
                         
                     }
                     //down and left
-                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((p.board_state.at(i+m).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j-m) == 0){
+                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j-m) == 0){
                         if(is_move_legal({i,j,i+m,j-m})){
                         ml.push_back({i,j,i+m,j-m});
                         }
@@ -700,10 +708,10 @@ class position {
                 }
 
                 //Rook
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 4 || p.board_state.at(i).at(j) == -4)){
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 4 || board_state.at(i).at(j) == -4)){
                     //down
-                    for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((p.board_state.at(i+m).at(j) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j) == 0){
+                    for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j) == 0){
                         if(is_move_legal({i,j,i+m,j})){
                         ml.push_back({i,j,i+m,j});
                         }
@@ -716,8 +724,8 @@ class position {
                         
                     }
                     //up
-                    for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((p.board_state.at(i-m).at(j) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j) == 0){
+                    for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j) == 0){
                         if(is_move_legal({i,j,i-m,j})){
                         ml.push_back({i,j,i-m,j});
                         }
@@ -730,8 +738,8 @@ class position {
                         
                     }
                     //right
-                    for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((p.board_state.at(i).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i).at(j+m) == 0){
+                    for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i).at(j+m) == 0){
                         if(is_move_legal({i,j,i,j+m})){
                         ml.push_back({i,j,i,j+m});
                         }
@@ -744,8 +752,8 @@ class position {
                         
                     }
                     //left
-                    for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((p.board_state.at(i).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i).at(j-m) == 0){
+                    for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i).at(j-m) == 0){
                         if(is_move_legal({i,j,i,j-m})){
                         ml.push_back({i,j,i,j-m});
                         }
@@ -760,10 +768,10 @@ class position {
                 }
                 
                 //Queen
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 5 || p.board_state.at(i).at(j) == -5)){
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 5 || board_state.at(i).at(j) == -5)){
                     //down
-                    for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((p.board_state.at(i+m).at(j) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j) == 0){
+                    for(int m = 1; ((i+m >= 0 && i+m <= 7) && (board_state.at(i+m).at(j) == 0 || (!((board_state.at(i+m).at(j) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j) == 0){
                         if(is_move_legal({i,j,i+m,j})){
                         ml.push_back({i,j,i+m,j});
                         }
@@ -776,8 +784,8 @@ class position {
                         
                     }
                     //up
-                    for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((p.board_state.at(i-m).at(j) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j) == 0){
+                    for(int m = 1; ((i-m >= 0 && i-m <= 7) && (board_state.at(i-m).at(j) == 0 || (!((board_state.at(i-m).at(j) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j) == 0){
                         if(is_move_legal({i,j,i-m,j})){
                         ml.push_back({i,j,i-m,j});
                         }
@@ -790,8 +798,8 @@ class position {
                         
                     }
                     //right
-                    for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((p.board_state.at(i).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i).at(j+m) == 0){
+                    for(int m = 1; ((j+m >= 0 && j+m <= 7) && (board_state.at(i).at(j+m) == 0 || (!((board_state.at(i).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i).at(j+m) == 0){
                         if(is_move_legal({i,j,i,j+m})){
                         ml.push_back({i,j,i,j+m});
                         }
@@ -804,8 +812,8 @@ class position {
                         
                     }
                     //left
-                    for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((p.board_state.at(i).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i).at(j-m) == 0){
+                    for(int m = 1; ((j-m >= 0 && j-m <= 7) && (board_state.at(i).at(j-m) == 0 || (!((board_state.at(i).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i).at(j-m) == 0){
                         if(is_move_legal({i,j,i,j-m})){
                         ml.push_back({i,j,i,j-m});
                         }
@@ -818,8 +826,8 @@ class position {
                         
                     }
                     //up and right
-                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((p.board_state.at(i-m).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j+m) == 0){
+                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i-m).at(j+m) == 0 || (!((board_state.at(i-m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j+m) == 0){
                         if(is_move_legal({i,j,i-m,j+m})){
                         ml.push_back({i,j,i-m,j+m});
                         }
@@ -832,8 +840,8 @@ class position {
                         
                     }
                     //up and left
-                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((p.board_state.at(i-m).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i-m).at(j-m) == 0){
+                    for(int m = 1; (((i-m >= 0 && i-m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i-m).at(j-m) == 0 || (!((board_state.at(i-m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i-m).at(j-m) == 0){
                         if(is_move_legal({i,j,i-m,j-m})){
                         ml.push_back({i,j,i-m,j-m});
                         }
@@ -846,8 +854,8 @@ class position {
                         
                     }
                     //down and right
-                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((p.board_state.at(i+m).at(j+m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j+m) == 0){
+                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j+m >= 0 && j+m <= 7)) && (board_state.at(i+m).at(j+m) == 0 || (!((board_state.at(i+m).at(j+m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j+m) == 0){
                         if(is_move_legal({i,j,i+m,j+m})){
                         ml.push_back({i,j,i+m,j+m});
                         }
@@ -860,8 +868,8 @@ class position {
                         
                     }
                     //down and left
-                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((p.board_state.at(i+m).at(j-m) > 0) == p.state_history.back().active_colour)))); ++m){
-                        if(p.board_state.at(i+m).at(j-m) == 0){
+                    for(int m = 1; (((i+m >= 0 && i+m <= 7) && (j-m >= 0 && j-m <= 7)) && (board_state.at(i+m).at(j-m) == 0 || (!((board_state.at(i+m).at(j-m) > 0) == state_history.back().active_colour)))); ++m){
+                        if(board_state.at(i+m).at(j-m) == 0){
                         if(is_move_legal({i,j,i+m,j-m})){
                         ml.push_back({i,j,i+m,j-m});
                         }
@@ -876,15 +884,15 @@ class position {
                 }
 
                 //pawns
-                if(((p.board_state.at(i).at(j) > 0) == p.state_history.back().active_colour) && (p.board_state.at(i).at(j) == 1 || p.board_state.at(i).at(j) == -1)){
+                if(((board_state.at(i).at(j) > 0) == state_history.back().active_colour) && (board_state.at(i).at(j) == 1 || board_state.at(i).at(j) == -1)){
                     //white
-                    if(p.state_history.back().active_colour){
-                        if(p.board_state.at(i-1).at(j) == 0){
+                    if(state_history.back().active_colour){
+                        if(board_state.at(i-1).at(j) == 0){
                             if(is_move_legal({i,j,i-1,j})){
                             ml.push_back({i,j,i-1,j});
                             }
                         }
-                        if(i == 6 && p.board_state.at(i-1).at(j) == 0 && p.board_state.at(i-2).at(j) == 0){
+                        if(i == 6 && board_state.at(i-1).at(j) == 0 && board_state.at(i-2).at(j) == 0){
                             if(is_move_legal({i,j,i-2,j})){
                             ml.push_back({i,j,i-2,j});
                             }
@@ -892,12 +900,12 @@ class position {
                     }
                     //black
                     else{
-                        if(p.board_state.at(i+1).at(j) == 0){
+                        if(board_state.at(i+1).at(j) == 0){
                             if(is_move_legal({i,j,i+1,j})){
                             ml.push_back({i,j,i+1,j});
                             }
                         }
-                        if(i == 1 && p.board_state.at(i+1).at(j) == 0 && p.board_state.at(i+2).at(j) == 0){
+                        if(i == 1 && board_state.at(i+1).at(j) == 0 && board_state.at(i+2).at(j) == 0){
                             if(is_move_legal({i,j,i+2,j})){
                             ml.push_back({i,j,i+2,j});
                             }
@@ -910,22 +918,22 @@ class position {
         
         //castle moves
         if(!state_history.back().king_pos.empty()){
-        if(p.state_history.back().active_colour && p.state_history.back().w_kc && p.board_state.at(7).at(5) == 0 && p.board_state.at(7).at(6) == 0 && can_castle()){
+        if(state_history.back().active_colour && state_history.back().w_kc && board_state.at(7).at(5) == 0 && board_state.at(7).at(6) == 0 && can_castle()){
             if(is_move_legal({7,4,7,6})){
             ml.push_back({7,4,7,6});
             }
         }
-        if(p.state_history.back().active_colour && p.state_history.back().w_qc && p.board_state.at(7).at(3) == 0 && p.board_state.at(7).at(2) == 0 && p.board_state.at(7).at(1) == 0  && can_castle()){
+        if(state_history.back().active_colour && state_history.back().w_qc && board_state.at(7).at(3) == 0 && board_state.at(7).at(2) == 0 && board_state.at(7).at(1) == 0  && can_castle()){
             if(is_move_legal({7,4,7,2})){
             ml.push_back({7,4,7,2});
             }
         }
-        if(!p.state_history.back().active_colour && p.state_history.back().b_kc && p.board_state.at(0).at(5) == 0 && p.board_state.at(0).at(6) == 0  && can_castle()){
+        if(!state_history.back().active_colour && state_history.back().b_kc && board_state.at(0).at(5) == 0 && board_state.at(0).at(6) == 0  && can_castle()){
             if(is_move_legal({0,4,0,6})){
             ml.push_back({0,4,0,6});
             }
         }
-        if(!p.state_history.back().active_colour && p.state_history.back().b_qc && p.board_state.at(0).at(3) == 0 && p.board_state.at(0).at(2) == 0 && p.board_state.at(0).at(1) == 0 &&  can_castle()){
+        if(!state_history.back().active_colour && state_history.back().b_qc && board_state.at(0).at(3) == 0 && board_state.at(0).at(2) == 0 && board_state.at(0).at(1) == 0 &&  can_castle()){
             if(is_move_legal({0,4,0,2})){
             ml.push_back({0,4,0,2});
             }
@@ -933,31 +941,31 @@ class position {
 
         }
         //en passant
-        if(!p.state_history.back().en_passant.empty()){
-            int m = p.state_history.back().en_passant.at(0);
-            int n = p.state_history.back().en_passant.at(1);
+        if(!state_history.back().en_passant.empty()){
+            int m = state_history.back().en_passant.at(0);
+            int n = state_history.back().en_passant.at(1);
             //white
-            if(p.state_history.back().active_colour){
-                if(n != 0 && p.board_state.at(m+1).at(n-1) == 1){
+            if(state_history.back().active_colour){
+                if(n != 0 && board_state.at(m+1).at(n-1) == 1){
                     if(is_move_legal({m+1,n-1,m,n})){
-                    ml.push_back({m+1,n-1,m,n});
+                    state_history.back().ml.push_back({m+1,n-1,m,n});
                     }
                 }
-                if(n != 7 && p.board_state.at(m+1).at(n+1) == 1){
+                if(n != 7 && board_state.at(m+1).at(n+1) == 1){
                     if(is_move_legal({m+1,n+1,m,n})){
                     ml.push_back({m+1,n+1,m,n});
                     }
                 }
             }
             else{
-                if(n != 0 && p.board_state.at(m-1).at(n-1) == -1){
+                if(n != 0 && board_state.at(m-1).at(n-1) == -1){
                     if(is_move_legal({m+1,n-1,m,n})){
                     ml.push_back({m+1,n-1,m,n});
                     }
                 }
-                if(n != 7 && p.board_state.at(m-1).at(n+1) == -1){
+                if(n != 7 && board_state.at(m-1).at(n+1) == -1){
                     if(is_move_legal({m+1,n+1,m,n})){
-                    ml.push_back({m+1,n+1,m,n});
+                    state_history.back().ml.push_back({m+1,n+1,m,n});
                     }
                 }
             }
@@ -976,7 +984,7 @@ class position {
             for(int i = -1; i <= 1; ++i){
                 for(int j = -1; j <= 1; ++j){
                     if(i == 0 && j == 0){continue;}
-                    if((m+i >= 0 && m+i <= 7) && (n+j >= 0 && n+j <= 7) && (p.board_state.at(i+m).at(j+n) == 0 || (p.board_state.at(m+i).at(n+j) < 0) == p.state_history.back().active_colour)){
+                    if((m+i >= 0 && m+i <= 7) && (n+j >= 0 && n+j <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(m+i).at(n+j) < 0) == state_history.back().active_colour)){
                         if(is_move_legal({m,n,m+i,n+j})){
                         ml.push_back({m,n,m+i,n+j});
                         }
@@ -991,7 +999,7 @@ class position {
             for(int i = -1; i <= 1; ++i){
                 for(int j = -1; j <= 1; ++j){
                     if(i == 0 && j == 0){continue;}
-                    if((m+i >= 0 && m+i <= 7) && (n+j >= 0 && n+j <= 7) && (p.board_state.at(i+m).at(j+n) == 0 || (p.board_state.at(m+i).at(n+j) < 0) == p.state_history.back().active_colour)){
+                    if((m+i >= 0 && m+i <= 7) && (n+j >= 0 && n+j <= 7) && (board_state.at(i+m).at(j+n) == 0 || (board_state.at(m+i).at(n+j) < 0) == state_history.back().active_colour)){
                         if(is_move_legal({m,n,m+i,n+j})){
                         ml.push_back({m,n,m+i,n+j});
                         }
@@ -1007,16 +1015,16 @@ class position {
     //returns the best move using min max
     vec best_move(int depth){
         if(depth == 0){return {};}
-        if(ml.empty()){return {};}
+        if(state_history.back().ml.empty()){return {};}
         double a = -999;
         double b = 999;
 
         int bestMove = 0;
         if(state_history.back().active_colour){
             double maxEval = -999;
-            for(int i = 0; i < ml.size(); ++i){
+            for(int i = 0; i < state_history.back().ml.size(); ++i){
 
-                make_move(ml.at(i));
+                make_move(state_history.back().ml.at(i));
                 double eval = minmax(depth - 1, a, b, false);
                 unmake_move();
             
@@ -1028,9 +1036,9 @@ class position {
         }
         else{
             double minEval = 999;
-            for(int i = 0; i < ml.size(); ++i){
+            for(int i = 0; i < state_history.back().ml.size(); ++i){
             
-                make_move(ml.at(i));
+                make_move(state_history.back().ml.at(i));
                 double eval = minmax(depth - 1, a, b, true);
                 unmake_move();
 
@@ -1041,7 +1049,7 @@ class position {
             std::cout << "\nBest Eval: " << minEval << "\n";
         }
         
-        return ml.at(bestMove);
+        return state_history.back().ml.at(bestMove);
     }
 
     //simple min max search
@@ -1071,11 +1079,11 @@ class position {
         quick_sort_moves3();
 
         if(player){
-            if(ml.empty()){return -999;}
+            if(state_history.back().ml.empty()){return -999;}
             double maxEval = -999;
-            for(int i = 0; i < ml.size(); ++i){
+            for(int i = 0; i < state_history.back().ml.size(); ++i){
                 
-                make_move(ml.at(i));
+                make_move(state_history.back().ml.at(i));
                 double eval = minmax(depth - 1, a, b, false);
                 unmake_move();
 
@@ -1087,11 +1095,11 @@ class position {
             return maxEval;
         }
         else{
-            if(ml.empty()){return 999;}
+            if(state_history.back().ml.empty()){return 999;}
             double minEval = 999;
-            for(int i = 0; i < ml.size(); ++i){
+            for(int i = 0; i < state_history.back().ml.size(); ++i){
                 
-                make_move(ml.at(i));
+                make_move(state_history.back().ml.at(i));
                 double eval = minmax(depth - 1, a, b, true);
                 unmake_move();
 
@@ -1201,14 +1209,14 @@ class position {
 
     //sorts list of moves 
     void quick_sort_moves3(){
-        vec sort_list(ml.size(),0);
+        vec sort_list(state_history.back().ml.size(),0);
 
-        for(int i = 0; i < ml.size(); ++i){
-            if(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3)) == 0){
+        for(int i = 0; i < state_history.back().ml.size(); ++i){
+            if(board_state.at(state_history.back().ml.at(i).at(2)).at(state_history.back().ml.at(i).at(3)) == 0){
                 sort_list.at(i) = -5;
                 continue;
             }
-            sort_list.at(i) = std::abs(board_state.at(ml.at(i).at(2)).at(ml.at(i).at(3))) - std::abs(board_state.at(ml.at(i).at(0)).at(ml.at(i).at(1)));
+            sort_list.at(i) = std::abs(board_state.at(state_history.back().ml.at(i).at(2)).at(state_history.back().ml.at(i).at(3))) - std::abs(board_state.at(state_history.back().ml.at(i).at(0)).at(state_history.back().ml.at(i).at(1)));
         }
 
         //insertion sort
@@ -1216,7 +1224,7 @@ class position {
             for(int j = i - 1; j >= 0; --j){
                 if(sort_list.at(j) < sort_list.at(j+1)){
                     std::swap(sort_list.at(j), sort_list.at(j+1));
-                    std::swap(ml.at(j), ml.at(j+1));
+                    std::swap(state_history.back().ml.at(j), state_history.back().ml.at(j+1));
                 }
             }
         }
@@ -1226,7 +1234,6 @@ class position {
 
     board board_state;
     std::vector<state> state_history;
-    move_list ml;
 
 };
 
@@ -1235,31 +1242,50 @@ class position {
 int main(){
 
         //starting positions
-    board start1_board = {{-4,-2,-3,-5,-6,-3,-2,-4},
-                   {-1,-1,-1,-1,-1,-1,-1,-1},
-                   {0,0,0,0,0,0,0,0},
-                   {0,0,0,0,0,0,0,0},
-                   {0,0,0,0,0,0,0,0},
-                   {0,0,0,0,0,0,0,0},
-                   {1,1,1,1,1,1,1,1},
-                   {4,2,3,5,6,3,2,4}}; //{7,4,0,4}
+    board start_board = {{-4,-2,-3,-5,-6,-3,-2,-4},
+                          {-1,-1,-1,-1,-1,-1,-1,-1},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {1,1,1,1,1,1,1,1},
+                          {4,2,3,5,6,3,2,4}}; //{7,4,0,4}
+
+    board blank_board = {{0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0}}; //{}
+
+    board test1_board = {{0,0,0,0,-6,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,0,0,0,0,0},
+                         {0,0,0,-3,0,0,0,0},
+                         {0,0,0,0,6,0,0,0}}; //{}
 
     std::cout << std::fixed;
 
-    state start_state = {1,1,1,1,1,0,0,0,0,{},{}};
-    position start_position = {start1_board, {start_state}, {}};
+    state start_state = {1,1,1,1,1,0,0,0,0,{},{},{7,4,0,4},{}};
+    state test1_state = {1,0,0,0,0,0,0,0,0,{},{},{7,4,0,4},{}};
+    position start_position = {start_board, {start_state}};
 
     auto start = high_resolution_clock::now();
 
     start_position.update_ml();
-    print_ml(start_position.ml);
-    int depth = 3; //  <---- DEPTH!!
+    print_ml(start_position.state_history.back().ml);
+    int depth = 6; //  <---- DEPTH!!
 
     //main while loop
-    while(start_position.ml.size() != 0 && start_position.state_history.back().halfmoves < 41){
+    while(start_position.state_history.back().ml.size() != 0 && start_position.state_history.back().halfmoves < 41){
         start_position.print_board();
 
-        std::cout << "Possible Move Count: " << start_position.ml.size() << "\n";
+        std::cout << "Possible Move Count: " << start_position.state_history.back().ml.size() << "\n";
         char a,c;
         int b,d;
 
@@ -1275,8 +1301,8 @@ int main(){
         std::cin >> d;
         std::cout << "\nYour move: " << a << b << " " << c << d << "\n";
         move = alg_to_mat(a,b,c,d);
-        for(int i = 0; i < start_position.ml.size(); ++i){
-            if(move == start_position.ml.at(i)){
+        for(int i = 0; i < start_position.state_history.back().ml.size(); ++i){
+            if(move == start_position.state_history.back().ml.at(i)){
                 legal = true; 
                 break;
             }
@@ -1285,7 +1311,7 @@ int main(){
         }
         start_position.make_move(move);
         start_position.update_ml();
-        print_ml(start_position.ml);
+        print_ml(start_position.state_history.back().ml);
         }
         else{ //Computer Player Move                           
         
@@ -1299,12 +1325,13 @@ int main(){
         start_position.update_ml();
         }
 
-
+        break;
+        
     }
 
         start_position.print_board();
-    print_ml(start_position.ml);
-    std::cout << "Possible Move Count: " << start_position.ml.size() << "\n";
+    print_ml(start_position.state_history.back().ml);
+    std::cout << "Possible Move Count: " << start_position.state_history.back().ml.size() << "\n";
     std::cout << "CHECK MATE!\n";
     if(start_position.state_history.back().active_colour){std::cout << "Black wins!\n";}
     else{std::cout << "White Wins!\n";}
