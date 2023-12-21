@@ -7,6 +7,8 @@
 #include <chrono>
 #include <random>
 
+#define DEPTH 5
+
 using namespace std::chrono;
 using board = std::vector<std::vector<int>>;
 using move_list = std::vector<std::vector<int>>;
@@ -17,6 +19,7 @@ using str = std::string;
 //global variables
 long int eval_calls = 0;
 long int possible_move_calls = 0;
+
 //piece Value
 
         board wpv_e = {{0,0,0,0,0,0,0,0},
@@ -186,6 +189,8 @@ struct state {
     vec en_passant; //square where en passant is possible. '-' if none are possible
     vec king_pos; //(w_king_m, w_king_n, b_king_m, b_king_n)
     move_list ml; //move list
+    int material_black;
+    int material_white;
 
 };
 
@@ -413,6 +418,7 @@ class position {
     //makes a move and changes the position
     void make_move(vec move){
 
+        int captured_piece = board_state.at(move.at(2)).at(move.at(3));
         //pushback new state 
         state_history.push_back(state_history.back());
         
@@ -421,6 +427,36 @@ class position {
 
         //update capture
         state_history.back().capture = board_state.at(move.at(2)).at(move.at(3));
+
+        //update material
+        int captured_value;
+        switch(std::abs(captured_piece)){
+            case 0: 
+                captured_value = 0;
+                break;
+            case 1: 
+                captured_value = 1;
+                break;
+            case 2: 
+                captured_value = 3;
+                break;
+            case 3: 
+                captured_value = 3;
+                break;
+            case 4: 
+                captured_value = 5;
+                break;
+            case 5: 
+                captured_value = 8;
+                break;
+            default: 
+            captured_value = 0;
+        }
+        if(state_history.back().active_colour){
+            state_history.back().material_white += captured_value;
+        } else {
+            state_history.back().material_black += captured_value;
+        }
         
         //updating castle rights
         //white
@@ -508,11 +544,13 @@ class position {
         //white
         if(board_state.at(move.at(2)).at(move.at(3)) == 1 && move.at(2) == 0){
             board_state.at(move.at(2)).at(move.at(3)) = 5;
+            state_history.back().material_white += 8;
             state_history.back().was_promotion = true;
         }
         //black
         if(board_state.at(move.at(2)).at(move.at(3)) == -1 && move.at(2) == 7){
             board_state.at(move.at(2)).at(move.at(3)) = -5;
+            state_history.back().material_black += 8;
             state_history.back().was_promotion = true;
         }
 
@@ -1014,7 +1052,7 @@ class position {
 
     //returns the best move using min max
     vec best_move(int depth){
-        if(depth == 0){return {};}
+        if(depth <= 0){return {};}
         if(state_history.back().ml.empty()){return {};}
         double a = -999;
         double b = 999;
@@ -1024,8 +1062,13 @@ class position {
             double maxEval = -999;
             for(int i = 0; i < state_history.back().ml.size(); ++i){
 
+                double eval;
                 make_move(state_history.back().ml.at(i));
-                double eval = minmax(depth - 1, a, b, false);
+                if(i >= 4){
+                    eval = minmax(depth - 2, a, b, false);
+                }else{
+                    eval = minmax(depth - 1, a, b, false);
+                }
                 unmake_move();
             
                 if(eval > maxEval){bestMove = i;}
@@ -1054,7 +1097,7 @@ class position {
 
     //simple min max search
     double minmax(int depth, double a, double b, bool player){
-        if(depth == 0){
+        if(depth <= 0){
             
             double e = eval();
 
@@ -1083,8 +1126,13 @@ class position {
             double maxEval = -999;
             for(int i = 0; i < state_history.back().ml.size(); ++i){
                 
+                double eval;
                 make_move(state_history.back().ml.at(i));
-                double eval = minmax(depth - 1, a, b, false);
+                if(i >= 4){
+                    eval = minmax(depth - 2, a, b, false);
+                }else{
+                    eval = minmax(depth - 1, a, b, false);
+                }
                 unmake_move();
 
                 maxEval = fmax(maxEval, eval);
@@ -1117,16 +1165,9 @@ class position {
     double eval(){
 
         ++eval_calls;
-        double eval = 0;
-        double late;
-        double thirtyone = 31;
-        double nine = 9;
-        double pawn_count = 8;
-        double piece_count = 6;
-        if(state_history.back().fullmoves > thirtyone){late = 0.01;}
-        else{late = (thirtyone - state_history.back().fullmoves)/thirtyone;}
-        //std::cout << "\nLate: " << late << "\n";
-
+        int material_eval = state_history.back().material_white - state_history.back().material_black;
+        int position_eval = 0;
+        
         //material
         for(int i = 0; i < 8; ++i){
             for(int j = 0 ; j < 8; ++j){
@@ -1138,61 +1179,52 @@ class position {
                         break;
 
                     case 6: // kings
-                        eval += 0.3*wkv_a.at(i).at(j)/nine;
+                        position_eval += wkv_a.at(i).at(j);
                         break;
 
                     case -6:
-                        eval -= 0.3*bkv_a.at(i).at(j)/nine;
+                        position_eval -= bkv_a.at(i).at(j);
                         break;
 
                     case 1: // pawns
-                        eval += 0.710001;
-                        eval += (wpv_e.at(i).at(j)*late)/nine/pawn_count;
-                        eval += (wpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
+                        position_eval += wpv_e.at(i).at(j);
+                        //position_eval += wpv_l.at(i).at(j);
                         break;
 
                     case -1:
-                        eval -= 0.71;
-                        eval -= (bpv_e.at(i).at(j)*late)/9/8;
-                        eval -= (bpv_l.at(i).at(j)*(1.001 - late))/nine/pawn_count;
+                        
+                        position_eval -= bpv_e.at(i).at(j);
+                        //position_eval -= bpv_l.at(i).at(j);
                         break;
 
                     case 2: // knights
-                        eval += 2.930001;
-                        eval += (wnv_a.at(i).at(j)*late)/nine/pawn_count;
+                        position_eval += wnv_a.at(i).at(j);
                         break;
 
                     case -2:
-                        eval -= 2.93;
-                        eval -= (bnv_a.at(i).at(j)*late)/nine/piece_count;
+                        position_eval -= bnv_a.at(i).at(j);
                         break;
 
                     case 3: // bishops
-                        eval += 3.000001;
-                        eval += (wbv_a.at(i).at(j)*late)/nine/piece_count;
+                        position_eval += wbv_a.at(i).at(j);
                         break;
 
                     case -3:
-                        eval -= 3.00;
-                        eval -= (bbv_a.at(i).at(j)*late)/nine/piece_count;
+                        position_eval -= bbv_a.at(i).at(j);
                         break;
 
                     case 4: // rooks
-                        eval += 4.560001;
-                        eval += (wrv_a.at(i).at(j)*late)/nine/piece_count;
+                        position_eval += wrv_a.at(i).at(j);
                         break;
 
                     case -4:
-                        eval -= 4.56;
-                        eval -= (brv_a.at(i).at(j)*late)/nine/piece_count;
+                        position_eval -= brv_a.at(i).at(j);
                         break;
 
                     case 5: // queens
-                        eval += 9.050001;
                         break;
 
                     case -5:
-                        eval -= 9.05;
                         break;
 
                     default:
@@ -1203,8 +1235,10 @@ class position {
             }
         }
 
+        double MATERIALISTIC = 1.0;
+        double POSITIONAL = 1.0;
 
-        return eval;
+        return MATERIALISTIC*material_eval + position_eval*0.1*POSITIONAL+ 0.001;
     }
 
     //sorts list of moves 
@@ -1271,15 +1305,15 @@ int main(){
 
     std::cout << std::fixed;
 
-    state start_state = {1,1,1,1,1,0,0,0,0,{},{},{7,4,0,4},{}};
-    state test1_state = {1,0,0,0,0,0,0,0,0,{},{},{7,4,0,4},{}};
+    state start_state = {1,1,1,1,1,0,0,0,0,{},{},{7,4,0,4},{},38,38};
+    state test1_state = {1,0,0,0,0,0,0,0,0,{},{},{7,4,0,4},{},0,0};
     position start_position = {start_board, {start_state}};
 
     auto start = high_resolution_clock::now();
 
     start_position.update_ml();
     print_ml(start_position.state_history.back().ml);
-    int depth = 6; //  <---- DEPTH!!
+    int depth = DEPTH; //  <---- DEPTH!!
 
     //main while loop
     while(start_position.state_history.back().ml.size() != 0 && start_position.state_history.back().halfmoves < 41){
@@ -1324,12 +1358,9 @@ int main(){
         start_position.make_move(bestMove);
         start_position.update_ml();
         }
-
-        break;
-        
     }
 
-        start_position.print_board();
+    start_position.print_board();
     print_ml(start_position.state_history.back().ml);
     std::cout << "Possible Move Count: " << start_position.state_history.back().ml.size() << "\n";
     std::cout << "CHECK MATE!\n";
