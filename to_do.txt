@@ -1,0 +1,15 @@
+Clean up To-Do:
+ - Seperatre the diffrenet parts of the Code
+ - Format code 
+ - Add comments
+
+Options: 
+ - PGN as input for starting position
+ - Choose which player is starting and which players turn it is
+ - select wether it's player vs computer or computer vs computer
+ - Choose the depth
+ - evaluate single position or play full game
+
+Add interface with common chess programm
+
+
